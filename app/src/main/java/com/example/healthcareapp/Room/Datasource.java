@@ -6,12 +6,15 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.Entity.User;
 
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class, Register.class}, version = 2)
 public abstract class Datasource extends RoomDatabase {
     private static Datasource datasourceInstance;
     public abstract UserDAO userDAO();
+    public abstract RegisterDAO registerDAO();
+
 
     public static Datasource newInstance(Context context) {
         if (datasourceInstance == null) {

@@ -50,8 +50,8 @@ public class HomeActivity extends AppCompatActivity {
         String username = sharedpreferences.getString("username","").toString();
         String token = sharedpreferences.getString("token","").toString();
         Toast.makeText(getApplicationContext(),"Welcome "+username+ "  token  "+ token,Toast.LENGTH_SHORT).show();
-        /*
-        exit.setOnClickListener(new View.OnClickListener() {
+
+        /*exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();

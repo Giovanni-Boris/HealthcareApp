@@ -40,45 +40,35 @@ public class LoginActivity extends AppCompatActivity {
         datasource = Datasource.newInstance(getApplicationContext());
         UserDAO userDao = datasource.userDAO();
         authService = new AuthService(userDao);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("CheckResult")
-            @Override
-            public void onClick(View view) {
-                String username = edUsername.getText().toString();
-                String password = edPassword.getText().toString();
-                if(username.length()==0 || password.length()==0)
-                    Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_SHORT).show();
-                else {
-                    /*String token = authService.loginUserAndGetToken(username,password);
-                    if(token != null) {
-                        Toast.makeText(getApplicationContext(), "Login Succeded " + token, Toast.LENGTH_SHORT).show();
-                        SharedPreferences sharedpreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedpreferences.edit();
-                        editor.putString("username", username);
-                        editor.putString("token", token);
-                        editor.apply();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }else
-                        Toast.makeText(getApplicationContext(), "Invalid Username and Password", Toast.LENGTH_SHORT).show();*/
-                    authService.loginUserAndGetToken(username, password)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(token -> {
-                                Log.d("LoginActivity", "Token: " + token);
-                            }, throwable -> {
-                                Log.e("LoginActivity", "Error: " + throwable.getMessage());
-                            });
+        btn.setOnClickListener(view -> {
+            String username = edUsername.getText().toString();
+            String password = edPassword.getText().toString();
+            if(username.length()==0 || password.length()==0)
+                Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_SHORT).show();
+            else {
+                authService.loginUserAndGetToken(username, password)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(token -> {
+                            Toast.makeText(getApplicationContext(), "Login Succeded ", Toast.LENGTH_SHORT).show();
+                            SharedPreferences sharedpreferences = getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("username", username);
+                            editor.putString("token", token);
+                            editor.apply();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        }, throwable -> {
+                            Toast.makeText(getApplicationContext(), "Invalid Username and Password", Toast.LENGTH_SHORT).show();
+                        });
 
-                }
             }
         });
 
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-            }
-        });
+        tv.setOnClickListener(view -> {
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            finish();
+        } );
 
     }
 }

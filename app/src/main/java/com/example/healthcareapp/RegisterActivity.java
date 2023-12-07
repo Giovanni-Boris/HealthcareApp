@@ -59,13 +59,9 @@ public class RegisterActivity extends AppCompatActivity {
                 if(username.length()==0 || password.length()==0 || email.length()==0 || confirm.length()==0)
                     Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_SHORT).show();
                 else {
-                    if(password.compareTo(confirm)==0){
+                    if(password.compareTo(confirm)==0)
                         registerUser(username, password);
-                        /*userDao.insert(new User(username, password));
-                        //db.register(username,email,password);
-                        Toast.makeText(getApplicationContext(), "Register successfully", Toast.LENGTH_SHORT).show();*/
-                        //startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                    }else
+                    else
                         Toast.makeText(getApplicationContext(), "Password and Confirm password didn't match", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -82,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    Toast.makeText(getApplicationContext(), "Register successfully", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                     finish();
                 }, throwable -> {

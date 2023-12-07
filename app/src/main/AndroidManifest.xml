@@ -20,6 +20,10 @@
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.HealthcareApp1"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
