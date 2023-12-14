@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.AddRegisterFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="22dp"
+            android:text="kg"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputPeso"
+            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="38dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="26dp"
+            android:text="Ud."
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputMedicamentos"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <TextView
+            android:id="@+id/carbohidrato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="62dp"
+            android:text="Carbohidratos"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/insulinaComida" />
+
+        <TextView
+            android:id="@+id/hora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="97dp"
+            android:text="Hora"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/glucemia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Glucemia"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hora" />
+
+        <TextView
+            android:id="@+id/insulinaComida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Insulina(comida)"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/glucemia" />
+
+        <TextView
+            android:id="@+id/medicamentos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Medicamentos"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/carbohidrato" />
+
+        <TextView
+            android:id="@+id/actividad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Actividad"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/medicamentos" />
+
+        <TextView
+            android:id="@+id/tensionArterial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Tension arterial"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/actividad" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="33dp"
+            android:layout_height="29dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="24dp"
+            android:clickable="true"
+            app:layout_constraintStart_toEndOf="@+id/glucemia"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTime"
+            app:srcCompat="@drawable/circle" />
+
+        <TextView
+            android:id="@+id/pesoCorporal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="Peso Corporal"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tensionArterial" />
+
+        <EditText
+            android:id="@+id/inputGlucemia"
+            android:layout_width="56dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
+            app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+
+        <EditText
+            android:id="@+id/inputInsulinaComida"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="15dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton3"
+            app:layout_constraintTop_toBottomOf="@+id/inputGlucemia" />
+
+        <EditText
+            android:id="@+id/inputMedicamentos"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="19dp"
+            android:background="@null"
+            android:ems="10"
+
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton5"
+            app:layout_constraintTop_toBottomOf="@+id/inputCarbohidratos" />
+
+        <EditText
+            android:id="@+id/inputTension"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="11dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton8"
+            app:layout_constraintTop_toBottomOf="@+id/inputActividad" />
+
+        <EditText
+            android:id="@+id/inputPeso"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton7"
+            app:layout_constraintTop_toBottomOf="@+id/inputTension" />
+
+        <EditText
+            android:id="@+id/inputActividad"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton6"
+            app:layout_constraintTop_toBottomOf="@+id/inputMedicamentos" />
+
+        <EditText
+            android:id="@+id/inputCarbohidratos"
+            android:layout_width="59dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="60dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="-"
+            android:inputType="numberDecimal"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            app:layout_constraintStart_toEndOf="@+id/floatingActionButton2"
+            app:layout_constraintTop_toBottomOf="@+id/inputInsulinaComida" />
+
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="182dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="59dp"
+            android:layout_marginTop="88dp"
+            android:layout_marginEnd="95dp"
+            android:background="@null"
+            android:ems="10"
+            android:inputType="time"
+            android:textColor="#000000"
+            android:textColorHint="#090808"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.208"
+            app:layout_constraintStart_toEndOf="@+id/hora"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton7"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="19dp"
+            android:clickable="true"
+            android:tint="#020202"
+            app:layout_constraintEnd_toStartOf="@+id/inputPeso"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/pesoCorporal"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton8"
+            app:rippleColor="#BA0C0C"
+            app:srcCompat="@drawable/square" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton5"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            app:layout_constraintStart_toEndOf="@+id/medicamentos"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton2"
+            app:srcCompat="@drawable/square" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton6"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="77dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
+            android:clickable="true"
+            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton8"
+            app:layout_constraintStart_toEndOf="@+id/actividad"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton5"
+            app:srcCompat="@drawable/square" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton3"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:clickable="true"
+            app:layout_constraintStart_toEndOf="@+id/insulinaComida"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
+            app:srcCompat="@drawable/square" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="45dp"
+            android:clickable="true"
+            app:layout_constraintStart_toEndOf="@+id/carbohidrato"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton3"
+            app:srcCompat="@drawable/square" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton8"
+            android:layout_width="36dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="22dp"
+            android:clickable="true"
+            app:layout_constraintEnd_toStartOf="@+id/inputTension"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tensionArterial"
+            app:layout_constraintTop_toBottomOf="@+id/floatingActionButton6"
+            app:srcCompat="@drawable/square" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="50dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="140dp"
+            android:text="mg/dL"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputGlucemia"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="70dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="20dp"
+            android:text="Unidades"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputInsulinaComida"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="38dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="58dp"
+            android:text="g"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputCarbohidratos"
+            app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="79dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"
+            android:text="h:m:m"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputActividad"
+            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="21dp"
+            android:text="mmHg"
+            android:textColor="#0B0A0A"
+            app:layout_constraintStart_toEndOf="@+id/inputTension"
+            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="346dp"
+            android:layout_height="61dp"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/btn_bg"
+            android:text="Add"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.523"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
