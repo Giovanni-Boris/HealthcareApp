@@ -28,11 +28,15 @@ public class LoginActivity extends AppCompatActivity {
     TextView tv;
     private Datasource datasource;
     private AuthService authService;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Log.d(TAG, "onCreate()");
+
         edUsername = findViewById(R.id.editTextRegEmail);
         edPassword = findViewById(R.id.editTextRegConfirmPassword);
         btn = findViewById(R.id.buttonRegister);
