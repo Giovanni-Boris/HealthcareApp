@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.healthcareapp.R;
@@ -17,23 +18,18 @@ public class NotificationService extends Service {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final int NOTIFICATION_ID = 1;
     private static final String TAG = "NotificationService";
-    public NotificationService() {
-    }
+
+    private boolean isStarted = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        createNotifChannel();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        createNotifChannel();
-
-        Notification notif = new Notification.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service Demo")
-                .setContentText("Demo notif ejecutando...")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .build();
+        Notification notif = buildNotification();
 
         startForeground(NOTIFICATION_ID, notif);
 
@@ -44,8 +40,28 @@ public class NotificationService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        stopForeground(true);
+    }
+
+    private Notification buildNotification(){
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        builder.setContentTitle("Foreground Service")
+                .setContentText("Servicio en primer plano ejecutándose")
+                .setSmallIcon(R.mipmap.ic_launcher);
+
+        return builder.build();
     }
 
     private void createNotifChannel(){

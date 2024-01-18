@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         loadNotificationForeground();
-        Log.d(TAG, "Se carga la notificación en foreground");
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -75,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadNotificationForeground(){
         Intent serviceIntent = new Intent(this, NotificationService.class);
-        ContextCompat.startForegroundService(this, serviceIntent);
+        startService(serviceIntent);
+
+        Log.d(TAG, "Se carga la notificación en foreground");
     }
 }
