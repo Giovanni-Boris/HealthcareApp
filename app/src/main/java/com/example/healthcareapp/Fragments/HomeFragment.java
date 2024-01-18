@@ -20,7 +20,7 @@ import com.example.healthcareapp.Adapter.RegisterAdapter;
 import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.R;
 import com.example.healthcareapp.Room.Datasource;
-import com.example.healthcareapp.StadisticView;
+import com.example.healthcareapp.Grafics.StadisticView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;

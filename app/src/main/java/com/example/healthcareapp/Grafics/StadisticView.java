@@ -1,4 +1,4 @@
-package com.example.healthcareapp;
+package com.example.healthcareapp.Grafics;
 
 import android.content.Context;
 import android.graphics.Canvas;

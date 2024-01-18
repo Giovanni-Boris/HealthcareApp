@@ -13,10 +13,6 @@
         android:theme="@style/Theme.HealthcareApp"
         tools:targetApi="31">
         <activity
-            android:name=".HomeActivity"
-            android:theme="@style/Theme.HealthcareApp1"
-            android:exported="false" />
-        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
