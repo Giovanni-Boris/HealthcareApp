@@ -19,6 +19,8 @@ import com.example.healthcareapp.Room.UserDAO;
 import com.example.healthcareapp.Services.AuthService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -28,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView tv;
     private Datasource datasource;
     private AuthService authService;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
             if(username.length()==0 || password.length()==0)
                 Toast.makeText(getApplicationContext(),"Please fill all details",Toast.LENGTH_SHORT).show();
             else {
-                authService.loginUserAndGetToken(username, password)
+                Disposable disposable = authService.loginUserAndGetToken(username, password)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(token -> {
@@ -61,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         }, throwable -> {
                             Toast.makeText(getApplicationContext(), "Invalid Username and Password", Toast.LENGTH_SHORT).show();
                         });
+                compositeDisposable.add(disposable);
 
             }
         });
@@ -70,5 +74,10 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         } );
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        compositeDisposable.dispose();
     }
 }

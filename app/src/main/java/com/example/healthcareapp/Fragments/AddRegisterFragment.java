@@ -1,7 +1,9 @@
 package com.example.healthcareapp.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -24,6 +26,7 @@ import com.example.healthcareapp.RegisterActivity;
 import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Room.RegisterDAO;
 import com.example.healthcareapp.Room.UserDAO;
+import com.example.healthcareapp.Services.AuthService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,6 +51,7 @@ public class AddRegisterFragment extends Fragment {
     Button button_add;
     private Datasource datasource;
     private RegisterDAO registerDAO;
+    private AuthService authService;
 
     public AddRegisterFragment() {
     }
@@ -89,6 +93,7 @@ public class AddRegisterFragment extends Fragment {
         button_add = view.findViewById(R.id.button_add);
         datasource = Datasource.newInstance(getActivity().getApplicationContext());
         registerDAO = datasource.registerDAO();
+        authService = new AuthService();
         button_add.setOnClickListener(view1 -> {
             Register register = new Register();
             register.setHora(currentDateAndTime);
@@ -99,8 +104,14 @@ public class AddRegisterFragment extends Fragment {
             register.setActividad(inputActividad.getText().toString());
             register.setTension(inputTension.getText().toString());
             register.setPeso(inputPeso.getText().toString());
-            registerGlucosa(register);
-
+            SharedPreferences sharedpreferences = getActivity().getSharedPreferences("shared_prefs", Context.MODE_PRIVATE);
+            String token = sharedpreferences.getString("token", null);
+            if(authService.validateToken(token)) {
+                Toast.makeText(getActivity().getApplicationContext(), "Token valido", Toast.LENGTH_SHORT).show();
+                registerGlucosa(register);
+            }else{
+                Toast.makeText(getActivity().getApplicationContext(), "Token invalido", Toast.LENGTH_SHORT).show();
+            }
         });
         return view;
 

@@ -15,39 +15,42 @@
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="636dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="68dp"
+            android:layout_marginBottom="192dp"
             android:background="#CC0606"
             android:clickable="true"
             android:contentDescription="Add Button"
             android:focusable="true"
             android:src="@drawable/ic_add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="406dp"
-            android:layout_height="348dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="65dp"
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_button"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/grafico"
+            app:layout_constraintVertical_bias="0.0" />
 
         <LinearLayout
             android:id="@+id/grafico"
-            android:layout_width="348dp"
-            android:layout_height="318dp"
+            android:layout_width="303dp"
+            android:layout_height="226dp"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="92dp"
+            android:layout_marginEnd="32dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/recyclerView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.484"
+            app:layout_constraintHorizontal_bias="0.2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
