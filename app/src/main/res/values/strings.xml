@@ -2,7 +2,11 @@
     <string name="app_name">HealthcareApp</string>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
-    <string name="add_button_content_description">Add Button</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_home_message">Continua registrando tus chequeos diarios</string>
+    <string name="percentage_course">%1$d%% registrados</string>
+    <string name="imageAccess">Image</string>
+    <string name="message_banner">Recuerda que registrando\n ayudara a tu medico *</string>
+    <string name="title">Añadir nuevo registro</string>
+
 </resources>

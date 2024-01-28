@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="headerTextSize">25sp</dimen>
+    <dimen name="card_maincourse_elevation">2dp</dimen>
+    <dimen name="card_image_elevation">4dp</dimen>
+    <dimen name="headerMoreTextSize">16sp</dimen>
+    <dimen name="normalPadding">10dp</dimen>
+
+</resources>
