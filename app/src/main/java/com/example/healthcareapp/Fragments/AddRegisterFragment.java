@@ -47,8 +47,7 @@ import androidx.fragment.app.DialogFragment;
 
 
     public class AddRegisterFragment extends Fragment {
-        private FirebaseDatabase db;
-        private DatabaseReference reference;
+
         private static final String ARG_PARAM1 = "param1";
         private static final String ARG_PARAM2 = "param2";
 
@@ -126,8 +125,6 @@ import androidx.fragment.app.DialogFragment;
                     String token = sharedpreferences.getString("token", null);
                     if(authService.validateToken(token)) {
                         Toast.makeText(getActivity().getApplicationContext(), "Token valido", Toast.LENGTH_SHORT).show();
-                        db = FirebaseDatabase.getInstance();
-                        reference = db.getReference("Registers");
                         Intent firebaseUploadIntent = new Intent(getActivity().getApplicationContext(), FirebaseUploadService.class);
                         firebaseUploadIntent.putExtra("register", register);
                         FirebaseUploadService.enqueueWork(getActivity().getApplicationContext(), firebaseUploadIntent);

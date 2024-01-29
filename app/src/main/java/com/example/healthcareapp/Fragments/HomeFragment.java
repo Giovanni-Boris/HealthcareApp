@@ -1,15 +1,20 @@
 package com.example.healthcareapp.Fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,7 @@ import com.example.healthcareapp.Adapter.RegisterAdapter;
 import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.R;
 import com.example.healthcareapp.Room.Datasource;
+import com.example.healthcareapp.Services.FirebaseFetchService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -26,7 +32,13 @@ import java.util.List;
 
 
 public class HomeFragment extends Fragment {
-
+    private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
+            Log.d("HomeFragment","registros");
+        }
+    };
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -56,6 +68,10 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+                dataReceiver,
+                new IntentFilter("DATA_FETCHED_ACTION")
+        );
     }
 
     @Override
@@ -69,6 +85,8 @@ public class HomeFragment extends Fragment {
         });
         datasource = Datasource.newInstance(getActivity().getApplicationContext());
         storeDataInArrays();
+        Intent fetchIntent = new Intent(requireContext(), FirebaseFetchService.class);
+        FirebaseFetchService.enqueueWork(requireContext(), fetchIntent);
 
         return view;
     }
@@ -97,6 +115,12 @@ public class HomeFragment extends Fragment {
             recyclerView.setAdapter(adapter);
         }).start();
 
+    }
+    @Override
+    public void onDestroy() {
+        // Desregistrar el BroadcastReceiver para evitar fugas de memoria
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
+        super.onDestroy();
     }
 
 }

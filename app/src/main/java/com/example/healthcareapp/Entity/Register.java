@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.Map;
 
 @Entity(tableName = "register")
 public class Register implements Serializable {
@@ -89,6 +90,22 @@ public class Register implements Serializable {
 
     public void setPeso(String peso) {
         this.peso = peso;
+    }
+
+    public static Register fromMap(Map<String, Object> map) {
+        Register register = new Register();
+
+        // La clave del mapa es la fecha y hora
+        register.setHora(map.get("hora").toString());
+        register.setGlucemia(Double.parseDouble(map.get("glucemia").toString()));
+        register.setInsulina(map.get("insulina").toString());
+        register.setCarbohidrato(map.get("carbohidrato").toString());
+        register.setMedicamento(map.get("medicamento").toString());
+        register.setActividad(map.get("actividad").toString());
+        register.setTension(map.get("tension").toString());
+        register.setPeso(map.get("peso").toString());
+
+        return register;
     }
 
 }
