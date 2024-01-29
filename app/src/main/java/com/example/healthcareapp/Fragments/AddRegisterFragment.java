@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -27,6 +28,11 @@ import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Room.RegisterDAO;
 import com.example.healthcareapp.Room.UserDAO;
 import com.example.healthcareapp.Services.AuthService;
+import com.example.healthcareapp.Services.FirebaseUploadService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.text.SimpleDateFormat;
@@ -39,12 +45,10 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import androidx.fragment.app.DialogFragment;
 
-    /**
-     * A simple {@link Fragment} subclass.
-     * Use the {@link com.example.healthcareapp.Fragments.AddRegisterFragment#newInstance} factory method to
-     * create an instance of this fragment.
-     */
+
     public class AddRegisterFragment extends Fragment {
+        private FirebaseDatabase db;
+        private DatabaseReference reference;
         private static final String ARG_PARAM1 = "param1";
         private static final String ARG_PARAM2 = "param2";
 
@@ -122,6 +126,11 @@ import androidx.fragment.app.DialogFragment;
                     String token = sharedpreferences.getString("token", null);
                     if(authService.validateToken(token)) {
                         Toast.makeText(getActivity().getApplicationContext(), "Token valido", Toast.LENGTH_SHORT).show();
+                        db = FirebaseDatabase.getInstance();
+                        reference = db.getReference("Registers");
+                        Intent firebaseUploadIntent = new Intent(getActivity().getApplicationContext(), FirebaseUploadService.class);
+                        firebaseUploadIntent.putExtra("register", register);
+                        FirebaseUploadService.enqueueWork(getActivity().getApplicationContext(), firebaseUploadIntent);
                         registerGlucosa(register);
                     }else{
                         Toast.makeText(getActivity().getApplicationContext(), "Token invalido", Toast.LENGTH_SHORT).show();
