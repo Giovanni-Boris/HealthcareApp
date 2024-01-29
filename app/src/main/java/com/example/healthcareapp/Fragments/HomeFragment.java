@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.healthcareapp.Adapter.RegisterAdapter;
 import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.R;
+import com.example.healthcareapp.Repository.RegisterRepository;
 import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Services.FirebaseFetchService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,13 +31,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 
 public class HomeFragment extends Fragment {
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
             Log.d("HomeFragment","registros");
+            chargeData(dataList);
         }
     };
     private static final String ARG_PARAM1 = "param1";
@@ -49,6 +57,7 @@ public class HomeFragment extends Fragment {
     List<Register> registers;
     private RegisterAdapter adapter;
     private Datasource datasource;
+    private RegisterRepository registerRepository;
     public HomeFragment() {
     }
 
@@ -84,7 +93,8 @@ public class HomeFragment extends Fragment {
             replaceFragments(new AddRegisterFragment());
         });
         datasource = Datasource.newInstance(getActivity().getApplicationContext());
-        storeDataInArrays();
+        registerRepository = new RegisterRepository(datasource.registerDAO());
+        registers = new ArrayList<>();
         Intent fetchIntent = new Intent(requireContext(), FirebaseFetchService.class);
         FirebaseFetchService.enqueueWork(requireContext(), fetchIntent);
 
@@ -97,30 +107,51 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.commit();
     }
     private void storeDataInArrays(){
-        new Thread(() -> {
-            registers = datasource.registerDAO().readAllData();
-            adapter = new RegisterAdapter(registers , new RegisterAdapter.OnItemClickListener() {
-                @Override public void onItemClick(Register item) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Registro "+item.getId(), Toast.LENGTH_SHORT).show();
-                    // Create a bundle with the data you want to pass to the detail fragment
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", item.getId());
-                    RegisterDetailFragment detailFragment = new RegisterDetailFragment();
-                    detailFragment.setArguments(bundle);
-                    replaceFragments(detailFragment);
-                }
-            });
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            recyclerView.setAdapter(adapter);
-        }).start();
+        Disposable disposable = registerRepository.getAllRegisters()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(registersChange -> {
+                    if(registers.size() != registersChange.size()){
+                        registers.addAll(registersChange);
+                    }
+                    if (adapter != null){
+                        adapter.notifyDataSetChanged();
+                        return;
+                    }
+                    adapter = new RegisterAdapter(registers , item -> {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Registro "+item.getId(), Toast.LENGTH_SHORT).show();
+                        // Create a bundle with the data you want to pass to the detail fragment
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("id", item.getId());
+                        RegisterDetailFragment detailFragment = new RegisterDetailFragment();
+                        detailFragment.setArguments(bundle);
+                        replaceFragments(detailFragment);
+                    });
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setAdapter(adapter);
+                }, throwable -> {
+                    Log.d("HomeFragment",throwable.getMessage());
+                });
+        compositeDisposable.add(disposable);
 
+
+    }
+    private void chargeData(ArrayList<Register> registers ){
+        Disposable disposable = registerRepository.insertRegisters(registers)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    Log.d("HomeFragment","Guardo con exito");
+                    storeDataInArrays();
+                }, throwable -> {
+                    Log.d("HomeFragment","No se pudo cargar");
+                });
+        compositeDisposable.add(disposable);
     }
     @Override
     public void onDestroy() {
-        // Desregistrar el BroadcastReceiver para evitar fugas de memoria
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
         super.onDestroy();
+        compositeDisposable.dispose();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
     }
 
 }

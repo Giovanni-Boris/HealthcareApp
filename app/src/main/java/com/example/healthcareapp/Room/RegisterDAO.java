@@ -19,4 +19,7 @@ public interface RegisterDAO {
     @Query("SELECT * FROM register WHERE id = :itemId")
     Register getItemById(long itemId);
 
+    @Insert
+    void insertAll(List<Register> registers);
+
 }
