@@ -111,6 +111,7 @@ public class HomeFragment extends Fragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(registersChange -> {
                     if(registers.size() != registersChange.size()){
+                        registers.clear();
                         registers.addAll(registersChange);
                     }
                     if (adapter != null){
@@ -120,7 +121,6 @@ public class HomeFragment extends Fragment {
                     adapter = new RegisterAdapter(registers , item -> {
                         Toast.makeText(getActivity().getApplicationContext(),
                                 "Registro "+item.getId(), Toast.LENGTH_SHORT).show();
-                        // Create a bundle with the data you want to pass to the detail fragment
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", item.getId());
                         RegisterDetailFragment detailFragment = new RegisterDetailFragment();
@@ -136,8 +136,8 @@ public class HomeFragment extends Fragment {
 
 
     }
-    private void chargeData(ArrayList<Register> registers ){
-        Disposable disposable = registerRepository.insertRegisters(registers)
+    private void chargeData(ArrayList<Register> dataList ){
+        Disposable disposable = registerRepository.syncWithFirebase(dataList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
                     Log.d("HomeFragment","Guardo con exito");

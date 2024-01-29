@@ -4,6 +4,7 @@ package com.example.healthcareapp.Repository;
 import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.Room.RegisterDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Completable;
@@ -25,5 +26,21 @@ public class RegisterRepository {
     public Flowable<List<Register>> getAllRegisters() {
         return Flowable.fromCallable(() -> registerDAO.readAllData())
                 .subscribeOn(Schedulers.io());
+    }
+
+    public Completable syncWithFirebase(List<Register> firebaseRegisters) {
+        return Completable.fromAction(() -> {
+            List<Register> roomRegisters = registerDAO.readAllData();
+            List<Register> missingRegisters = findMissingRegisters(roomRegisters, firebaseRegisters);
+            registerDAO.insertAll(missingRegisters);
+        }).subscribeOn(Schedulers.io());
+    }
+    private List<Register> findMissingRegisters(List<Register> roomRegisters, List<Register> firebaseRegisters) {
+        List<Register> missingRegisters = new ArrayList<>();
+        int diff  = firebaseRegisters.size() - roomRegisters.size();
+        for(int i=0; i < diff ;i++){
+            missingRegisters.add(firebaseRegisters.get(roomRegisters.size() + i));
+        }
+        return missingRegisters;
     }
 }
