@@ -1,12 +1,12 @@
 package com.example.healthcareapp.Services;
 
-import android.content.Context;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.Intent;
-import android.os.Parcelable;
+import android.os.Build;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
+import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthcareapp.Entity.Register;
@@ -17,21 +17,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-public class FirebaseFetchService extends JobIntentService {
-    private static final int JOB_ID = 1000;
+public class FirebaseFetchService extends JobService {
 
-    public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, FirebaseFetchService.class, JOB_ID, work);
-    }
+    private DatabaseReference reference;
+    private ValueEventListener valueEventListener;
 
     @Override
-    protected void onHandleWork(@NonNull Intent intent) {
-        // Tu lógica de recuperación de datos desde Firebase
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Registers");
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+    public boolean onStartJob(JobParameters params) {
+        reference = FirebaseDatabase.getInstance().getReference("Registers");
+
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<Register> dataList = new ArrayList<>();
@@ -40,19 +37,30 @@ public class FirebaseFetchService extends JobIntentService {
                     Register register = Register.fromMap(dataMap);
                     dataList.add(register);
                 }
-                Log.d("FirebaseFetchService","Tamaño" +dataList.size());
-                // Ahora dataList contiene objetos Register deserializados de Firebase
+                Log.d("MiJobService", "Tamaño: " + dataList.size());
                 sendBroadcastData(dataList);
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-        });
+        };
+        reference.addValueEventListener(valueEventListener);
+        return true;
     }
+
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        Log.d("MiJobService", "Deteniendo: ");
+        if (reference != null && valueEventListener != null) {
+            reference.removeEventListener(valueEventListener);
+        }
+        return false;
+    }
+
     private void sendBroadcastData(ArrayList<Register> dataList) {
         Intent broadcastIntent = new Intent("DATA_FETCHED_ACTION");
-        broadcastIntent.putExtra("dataList",  dataList);
+        broadcastIntent.putExtra("dataList", dataList);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
     }
 }

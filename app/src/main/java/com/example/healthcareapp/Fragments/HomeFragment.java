@@ -1,6 +1,9 @@
 package com.example.healthcareapp.Fragments;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,6 +50,8 @@ public class HomeFragment extends Fragment {
             chargeData(dataList);
         }
     };
+    private static final int JOB_ID = 1;
+    private JobScheduler jobScheduler;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -95,8 +100,7 @@ public class HomeFragment extends Fragment {
         datasource = Datasource.newInstance(getActivity().getApplicationContext());
         registerRepository = new RegisterRepository(datasource.registerDAO());
         registers = new ArrayList<>();
-        Intent fetchIntent = new Intent(requireContext(), FirebaseFetchService.class);
-        FirebaseFetchService.enqueueWork(requireContext(), fetchIntent);
+        iniciarJobService();
 
         return view;
     }
@@ -110,12 +114,11 @@ public class HomeFragment extends Fragment {
         Disposable disposable = registerRepository.getAllRegisters()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(registersChange -> {
-                    if(registers.size() != registersChange.size()){
-                        registers.clear();
-                        registers.addAll(registersChange);
-                    }
-                    if (adapter != null){
-                        adapter.notifyDataSetChanged();
+                    int originalSize = registers.size();
+                    registers.addAll(registersChange.subList(originalSize, registersChange.size()));
+
+                    if (adapter != null) {
+                        adapter.notifyItemRangeInserted(originalSize, registersChange.size() - originalSize);
                         return;
                     }
                     adapter = new RegisterAdapter(registers , item -> {
@@ -136,6 +139,7 @@ public class HomeFragment extends Fragment {
 
 
     }
+
     private void chargeData(ArrayList<Register> dataList ){
         Disposable disposable = registerRepository.syncWithFirebase(dataList)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -147,10 +151,35 @@ public class HomeFragment extends Fragment {
                 });
         compositeDisposable.add(disposable);
     }
+    private void iniciarJobService() {
+        jobScheduler = (JobScheduler) requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+        ComponentName componentName = new ComponentName(requireContext(), FirebaseFetchService.class);
+
+        JobInfo jobInfo = new JobInfo.Builder(JOB_ID, componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(false)
+                .build();
+
+        int result = jobScheduler.schedule(jobInfo);
+
+        if (result == JobScheduler.RESULT_SUCCESS) {
+            Log.d("HomeFragment","Job creado");
+        } else {
+            Log.d("HomeFragment","Job no creado");
+        }
+    }
+
+    private void detenerJobService() {
+        if (jobScheduler != null) {
+            jobScheduler.cancel(JOB_ID);
+        }
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
         compositeDisposable.dispose();
+        detenerJobService();
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
     }
 
