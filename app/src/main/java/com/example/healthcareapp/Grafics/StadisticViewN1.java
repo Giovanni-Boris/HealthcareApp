@@ -10,11 +10,11 @@ import com.example.healthcareapp.Entity.Register;
 
 import java.util.List;
 
-public class StadisticView extends View {
+public class StadisticViewN1 extends View {
 
     private List<Register> registers;
 
-    public StadisticView(Context context, List<Register> registers) {
+    public StadisticViewN1(Context context, List<Register> registers) {
         super(context);
         this.registers = registers;
     }

@@ -7,7 +7,7 @@
         <item android:id="@+id/calendar"
             android:icon="@drawable/baseline_whatshot_24"
             android:title="Calendar" />
-        <item android:id="@+id/gallery"
+        <item android:id="@+id/graphic"
             android:icon="@drawable/baseline_image_24"
             android:title="Gallery" />
     </group>

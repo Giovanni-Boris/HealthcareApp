@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthcareapp.Fragments.CalendarFragment;
+import com.example.healthcareapp.Fragments.GraphicFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             if(item.getItemId()==R.id.home)replaceFragments(new HomeFragment());
             else if(item.getItemId()==R.id.calendar)replaceFragments(new CalendarFragment());
-            else replaceFragments(new CalendarFragment());
+            else replaceFragments(new GraphicFragment());
             return true;
         });
     }

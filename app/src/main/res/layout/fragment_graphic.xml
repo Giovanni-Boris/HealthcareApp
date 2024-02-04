@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.GraphicFragment">
+    <LinearLayout
+        android:id="@+id/title"
+        android:paddingTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Graphics" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/grafico"
+        android:layout_below="@+id/title"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="280dp">
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/grafico2"
+        android:layout_below="@+id/grafico"
+        android:layout_above="@+id/controls"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/controls"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/simule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:background="#9C27B0"
+            android:padding="10dp"
+            android:text="Regresar"
+            android:textColor="@android:color/white">
+
+        </Button>
+    </LinearLayout>
+
+</RelativeLayout>
