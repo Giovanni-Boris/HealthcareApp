@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Room.UserDAO;
+import com.example.healthcareapp.Services.AlarmService;
 import com.example.healthcareapp.Services.AuthService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         btn.setOnClickListener(view -> {
 
             startForegroundService(new Intent(LoginActivity.this, ForegroundService.class));
+            startService(new Intent(LoginActivity.this, AlarmService.class));
+
             String username = edUsername.getText().toString();
             String password = edPassword.getText().toString();
             if(username.length()==0 || password.length()==0)

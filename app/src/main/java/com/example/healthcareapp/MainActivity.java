@@ -1,5 +1,6 @@
 package com.example.healthcareapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
+import com.example.healthcareapp.Services.AlarmService;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,5 +64,12 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, ForegroundService.class));
+        stopService(new Intent(this, AlarmService.class));
+        super.onDestroy();
     }
 }
