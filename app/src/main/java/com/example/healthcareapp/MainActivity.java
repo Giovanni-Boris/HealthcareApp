@@ -15,7 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
-import com.example.healthcareapp.Services.AlarmService;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {

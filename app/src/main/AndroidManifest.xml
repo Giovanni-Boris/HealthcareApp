@@ -16,7 +16,7 @@
         android:theme="@style/Theme.HealthcareApp"
         tools:targetApi="31">
         <service
-            android:name=".Services.AlarmService"
+            android:name=".AlarmService"
             android:enabled="true"
             android:exported="true"></service>
         <service
