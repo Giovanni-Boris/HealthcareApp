@@ -1,15 +1,19 @@
 package com.example.healthcareapp;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import com.example.healthcareapp.Entity.Alarm;
-import com.example.healthcareapp.Entity.User;
-import com.example.healthcareapp.Room.AlarmDAO;
 import com.example.healthcareapp.Room.Datasource;
 
 import java.time.LocalDate;
@@ -21,11 +25,15 @@ import io.reactivex.schedulers.Schedulers;
 
 public class AlarmService extends Service {
     public final String TAG = "AlarmService";
+    public final String CHANNEL_ID = "AlarmServiceChannel";
+    public final int NOTIFICATION_ID = 2;
 
     private Handler handler;
     private Runnable numberCheckRunnable;
 
     private Datasource datasource;
+
+    NotificationManager nm;
 
     @Override
     public void onCreate() {
@@ -68,7 +76,7 @@ public class AlarmService extends Service {
 
                     for(Alarm a:alarmas){
                         if (a.getDay() == LocalDate.now().getDayOfMonth()){
-                            Log.d(TAG, "Muestra notificacion");
+                            showNotif();
                             return;
                         }
                     }
@@ -91,5 +99,45 @@ public class AlarmService extends Service {
                 .subscribe(() -> {
                     Log.d(TAG, "Insercion realizada");
                 });
+    }
+
+    private void showNotif(){
+        createNotificationChannel();
+        nm.notify(NOTIFICATION_ID, buildNotification());
+        Log.d(TAG, "Muestra notificacion");
+    }
+
+    private Notification buildNotification() {
+        Intent notificationIntent = new Intent(this, LoginActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Alarma")
+                .setContentText("Presiona para abrir la aplicación")
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        return builder.build();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+
+            nm = getSystemService(NotificationManager.class);
+            if (nm != null) {
+                nm.createNotificationChannel(channel);
+            }
+        }
     }
 }
