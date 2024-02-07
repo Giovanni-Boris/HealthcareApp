@@ -1,13 +1,10 @@
 package com.example.healthcareapp.Fragments;
 
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
+
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,7 +25,6 @@ import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.R;
 import com.example.healthcareapp.Repository.RegisterRepository;
 import com.example.healthcareapp.Room.Datasource;
-import com.example.healthcareapp.Services.FirebaseFetchService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -45,13 +41,10 @@ public class HomeFragment extends Fragment {
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
-            Log.d("HomeFragment","registros");
-            chargeData(dataList);
+            int new_values =  intent.getIntExtra("new_values", 0);
+            storeDataInArrays();
         }
     };
-    private static final int JOB_ID = 1;
-    private JobScheduler jobScheduler;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -100,7 +93,7 @@ public class HomeFragment extends Fragment {
         datasource = Datasource.newInstance(getActivity().getApplicationContext());
         registerRepository = new RegisterRepository(datasource.registerDAO());
         registers = new ArrayList<>();
-        iniciarJobService();
+        storeDataInArrays();
 
         return view;
     }
@@ -123,7 +116,7 @@ public class HomeFragment extends Fragment {
                     }
                     adapter = new RegisterAdapter(registers , item -> {
                         Toast.makeText(getActivity().getApplicationContext(),
-                                "Registro "+item.getId(), Toast.LENGTH_SHORT).show();
+                                "Registro  "+item.getId(), Toast.LENGTH_SHORT).show();
                         Bundle bundle = new Bundle();
                         bundle.putInt("id", item.getId());
                         RegisterDetailFragment detailFragment = new RegisterDetailFragment();
@@ -139,47 +132,11 @@ public class HomeFragment extends Fragment {
 
 
     }
-
-    private void chargeData(ArrayList<Register> dataList ){
-        Disposable disposable = registerRepository.syncWithFirebase(dataList)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    Log.d("HomeFragment","Guardo con exito");
-                    storeDataInArrays();
-                }, throwable -> {
-                    Log.d("HomeFragment","No se pudo cargar");
-                });
-        compositeDisposable.add(disposable);
-    }
-    private void iniciarJobService() {
-        jobScheduler = (JobScheduler) requireContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
-
-        ComponentName componentName = new ComponentName(requireContext(), FirebaseFetchService.class);
-
-        JobInfo jobInfo = new JobInfo.Builder(JOB_ID, componentName)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setPersisted(false)
-                .build();
-
-        int result = jobScheduler.schedule(jobInfo);
-
-        if (result == JobScheduler.RESULT_SUCCESS) {
-            Log.d("HomeFragment","Job creado");
-        } else {
-            Log.d("HomeFragment","Job no creado");
-        }
-    }
-
-    private void detenerJobService() {
-        if (jobScheduler != null) {
-            jobScheduler.cancel(JOB_ID);
-        }
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("HomeFragment","Eliminando fragment");
         compositeDisposable.dispose();
-        detenerJobService();
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
     }
 

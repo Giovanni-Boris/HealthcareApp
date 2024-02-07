@@ -1,5 +1,6 @@
 package com.example.healthcareapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
+import com.example.healthcareapp.Services.FirebaseFetchService;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle = new ActionBarDrawerToggle(this,this.drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        startFirebaseFetchService();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         replaceFragments(new HomeFragment());
@@ -62,5 +65,21 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frameLayout, fragment);
         fragmentTransaction.commit();
+    }
+    private void startFirebaseFetchService() {
+        Intent serviceIntent = new Intent(this, FirebaseFetchService.class);
+        this.startService(serviceIntent);
+    }
+
+    private void stopFirebaseFetchService() {
+        Intent serviceIntent = new Intent(this, FirebaseFetchService.class);
+        this.stopService(serviceIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopFirebaseFetchService();
+
     }
 }
