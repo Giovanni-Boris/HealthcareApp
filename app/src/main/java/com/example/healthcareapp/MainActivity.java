@@ -16,12 +16,14 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
 import com.example.healthcareapp.Services.FirebaseFetchService;
+import com.example.healthcareapp.Services.FirebaseForegroundService;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
+    private boolean isForegroundServiceRunning = false;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -81,5 +83,42 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         stopFirebaseFetchService();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        // Verificar si el servicio en primer plano está en ejecución
+        if (isForegroundServiceRunning) {
+            // Detener el servicio en primer plano
+            stopForegroundService();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopFirebaseFetchService();
+        // Verificar si el servicio en primer plano no está en ejecución
+        if (!isForegroundServiceRunning) {
+            // Iniciar el servicio en primer plano
+            startForegroundService();
+        }
+    }
+
+    private void startForegroundService() {
+        // Iniciar el servicio en primer plano
+        Intent serviceIntent = new Intent(this, FirebaseForegroundService.class);
+        startForegroundService(serviceIntent);
+        isForegroundServiceRunning = true;
+    }
+
+    private void stopForegroundService() {
+        // Detener el servicio en primer plano
+        Intent serviceIntent = new Intent(this, FirebaseForegroundService.class);
+        stopService(serviceIntent);
+        isForegroundServiceRunning = false;
     }
 }

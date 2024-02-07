@@ -42,6 +42,8 @@ public class HomeFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             int new_values =  intent.getIntExtra("new_values", 0);
+            Toast.makeText(getActivity().getApplicationContext(),
+                    "Nuevos registros añadidos "+new_values, Toast.LENGTH_SHORT).show();
             storeDataInArrays();
         }
     };

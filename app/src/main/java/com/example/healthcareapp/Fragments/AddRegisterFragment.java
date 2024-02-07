@@ -1,8 +1,6 @@
 package com.example.healthcareapp.Fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -20,15 +18,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.healthcareapp.Entity.Register;
-import com.example.healthcareapp.Entity.User;
-import com.example.healthcareapp.LoginActivity;
 import com.example.healthcareapp.R;
-import com.example.healthcareapp.RegisterActivity;
 import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Room.RegisterDAO;
-import com.example.healthcareapp.Room.UserDAO;
 import com.example.healthcareapp.Services.AuthService;
-import com.example.healthcareapp.Services.FirebaseUploadService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
@@ -125,9 +118,7 @@ import androidx.fragment.app.DialogFragment;
                     String token = sharedpreferences.getString("token", null);
                     if(authService.validateToken(token)) {
                         Toast.makeText(getActivity().getApplicationContext(), "Token valido", Toast.LENGTH_SHORT).show();
-                        Intent firebaseUploadIntent = new Intent(getActivity().getApplicationContext(), FirebaseUploadService.class);
-                        firebaseUploadIntent.putExtra("register", register);
-                        FirebaseUploadService.enqueueWork(getActivity().getApplicationContext(), firebaseUploadIntent);
+                        saveInFirebase(register);
                         registerGlucosa(register);
                     }else{
                         Toast.makeText(getActivity().getApplicationContext(), "Token invalido", Toast.LENGTH_SHORT).show();
@@ -141,6 +132,17 @@ import androidx.fragment.app.DialogFragment;
             });
             dialog.show(getChildFragmentManager(), NoticeDialogFragment.TAG);
 
+        }
+        private void saveInFirebase(Register new_register){
+            FirebaseDatabase db = FirebaseDatabase.getInstance();
+            DatabaseReference reference = db.getReference("Registers");
+
+            reference.child(new_register.getHora()).setValue(new_register).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    Log.d("Firebase","Guardo en firebase");
+                }
+            });
         }
         private void registerGlucosa(Register register) {
             Disposable disposable = Completable.fromAction(() -> {

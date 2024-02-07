@@ -39,10 +39,10 @@ public class FirebaseFetchService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "Creando");
+        Log.d(TAG,"Prendiendo  el servicio");
         datasource = Datasource.newInstance(getApplicationContext());
         registerRepository = new RegisterRepository(datasource.registerDAO());
-        databaseReference = FirebaseDatabase.getInstance().getReference("tu_nodo_en_firebase");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Registers");
     }
 
     @Override
@@ -54,9 +54,8 @@ public class FirebaseFetchService extends Service {
     private Runnable fetchDataRunnable = new Runnable() {
         @Override
         public void run() {
-            compositeDisposable.dispose();
             fetchFirebaseData();
-            handler.postDelayed(this, 60000); // 60000 milliseconds = 1 minute
+            handler.postDelayed(this, 10000); // 60000 milliseconds = 1 minute
         }
     };
 
@@ -71,7 +70,7 @@ public class FirebaseFetchService extends Service {
                         Register register = Register.fromMap(dataMap);
                         dataList.add(register);
                     }
-                    Log.d(TAG,"Obteniendo valores de friebase" );
+                    Log.d(TAG,"Obteniendo valores de friebase " +dataList.size());
                     chargeData(dataList);
                 }
             } else {
@@ -80,10 +79,11 @@ public class FirebaseFetchService extends Service {
         });
     }
     private void chargeData(ArrayList<Register> dataList ){
-        Log.d(TAG,"OBSERVABLES PENDIENTES "+compositeDisposable.size());
+        //Log.d(TAG,"OBSERVABLES PENDIENTES "+compositeDisposable.size());
         Disposable disposable = registerRepository.syncWithFirebase(dataList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((size) -> {
+                    Log.d(TAG,"Misisng"+ size);
                     sendBroadcastData(size);
                 }, throwable -> {
                     Log.d(TAG,"No se pudo cargar");
@@ -107,6 +107,7 @@ public class FirebaseFetchService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG,"Deteniendo el servicio");
         super.onDestroy();
         compositeDisposable.dispose();
         handler.removeCallbacks(fetchDataRunnable);
