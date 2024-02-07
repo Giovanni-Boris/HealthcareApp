@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("HomeFragment","Eliminando fragment");
+        //Log.d("HomeFragment","Eliminando fragment");
         compositeDisposable.dispose();
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
     }

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
+        startFirebaseFetchService();
         // Verificar si el servicio en primer plano está en ejecución
         if (isForegroundServiceRunning) {
             // Detener el servicio en primer plano

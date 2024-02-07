@@ -39,7 +39,7 @@ public class FirebaseFetchService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"Prendiendo  el servicio");
+        //Log.d(TAG,"Prendiendo  el servicio");
         datasource = Datasource.newInstance(getApplicationContext());
         registerRepository = new RegisterRepository(datasource.registerDAO());
         databaseReference = FirebaseDatabase.getInstance().getReference("Registers");
@@ -70,7 +70,6 @@ public class FirebaseFetchService extends Service {
                         Register register = Register.fromMap(dataMap);
                         dataList.add(register);
                     }
-                    Log.d(TAG,"Obteniendo valores de friebase " +dataList.size());
                     chargeData(dataList);
                 }
             } else {
@@ -98,7 +97,7 @@ public class FirebaseFetchService extends Service {
         return null;
     }
     private void sendBroadcastData(int missingRegisters) {
-        Log.d(TAG,"Nuevos valores " + missingRegisters);
+        //Log.d(TAG,"Nuevos valores " + missingRegisters);
         if (missingRegisters == 0) return;
         Intent broadcastIntent = new Intent("DATA_FETCHED_ACTION");
         broadcastIntent.putExtra("new_values",missingRegisters);

@@ -1,5 +1,7 @@
 package com.example.healthcareapp.Services;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,11 +15,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthcareapp.MainActivity;
 
@@ -32,6 +36,7 @@ public class FirebaseForegroundService extends Service {
     private BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("ForegroundService","Llamando ");
             int missingRegisters = intent.getIntExtra("missing_registers", 0);
             showNotification(missingRegisters);
         }
@@ -40,6 +45,7 @@ public class FirebaseForegroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        System.out.println("Llamando al  foregorun service");
         createNotificationChannel();
         registerNotificationReceiver();
         backgroundServiceConnector = new BackgroundServiceConnector(this);
@@ -92,12 +98,14 @@ public class FirebaseForegroundService extends Service {
     }
 
     private void registerNotificationReceiver() {
-        IntentFilter filter = new IntentFilter("DATA_FETCHED_ACTION");
-        registerReceiver(notificationReceiver, filter);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(
+                notificationReceiver,
+                new IntentFilter("DATA_FETCHED_ACTION")
+        );
     }
 
     private void unregisterNotificationReceiver() {
-        unregisterReceiver(notificationReceiver);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(notificationReceiver);
     }
 
     private void showNotification(int missingRegisters) {
