@@ -1,6 +1,7 @@
 package com.example.healthcareapp.Room;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -15,4 +16,7 @@ public interface AlarmDAO {
 
     @Query("SELECT * FROM alarm")
     List<Alarm> readAllDAta();
+
+    @Query("DELETE FROM alarm WHERE id=:id")
+    void deleteAlarmById(Long id);
 }

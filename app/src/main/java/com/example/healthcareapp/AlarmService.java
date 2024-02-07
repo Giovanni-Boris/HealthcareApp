@@ -37,6 +37,7 @@ public class AlarmService extends Service {
     private Runnable numberCheckRunnable;
 
     private Datasource datasource;
+    private long alarmId = -1;
 
     NotificationManager nm;
 
@@ -81,9 +82,11 @@ public class AlarmService extends Service {
 
                     for(Alarm a:alarmas){
                         if (a.getDay() == LocalDate.now().getDayOfMonth()){
+                            alarmId = a.getId();
                             sendBroadcastAlarm();
                             return;
                         }
+                        alarmId = -1;
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -95,7 +98,7 @@ public class AlarmService extends Service {
 
     private void sendBroadcastAlarm(){
         Intent broadcastIntent = new Intent(BC_ACTION);
-        //broadcastIntent.putExtra("dataList", dataList);
+        broadcastIntent.putExtra("alarmId", alarmId);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
         Log.d(TAG, "Mensaje broadcast enviado");
     }

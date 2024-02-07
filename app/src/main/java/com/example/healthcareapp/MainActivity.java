@@ -21,7 +21,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
 import com.example.healthcareapp.Fragments.NoticeDialogFragment;
+import com.example.healthcareapp.Room.Datasource;
 import com.google.android.material.navigation.NavigationView;
+
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "ActivityMain";
@@ -31,12 +36,16 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isStop = false;
     private boolean showDialog = false;
+    private long alarmId;
+
+    private Datasource datasource;
 
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
             Log.d(TAG,"Broadcast");
+            alarmId = (long) intent.getSerializableExtra("alarmId");
 
             if (!isStop && !showDialog)
                 showDialogFragment();
@@ -65,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        datasource = Datasource.newInstance(getApplicationContext());
 
         buildBroadcastReceiver();
 
@@ -130,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDialogPositiveClick() {
                 Log.d(TAG, "Aceptar");
+                simpleDelete();
                 showDialog = false;
             }
 
@@ -161,5 +173,19 @@ public class MainActivity extends AppCompatActivity {
                 dataReceiver,
                 new IntentFilter(AlarmService.BC_ACTION)
         );
+    }
+
+    private void simpleDelete(){
+        Completable.fromAction(() -> {
+                    if (alarmId != -1){
+                        datasource.alarmDAO().deleteAlarmById(alarmId);
+                        alarmId = -1;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> {
+                    Log.d(TAG, "Eliminación completa...");
+                });
     }
 }
