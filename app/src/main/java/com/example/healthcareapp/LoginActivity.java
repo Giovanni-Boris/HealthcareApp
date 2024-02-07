@@ -41,8 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         UserDAO userDao = datasource.userDAO();
         authService = new AuthService(userDao);
         btn.setOnClickListener(view -> {
-
-            startForegroundService(new Intent(LoginActivity.this, ForegroundService.class));
             startService(new Intent(LoginActivity.this, AlarmService.class));
 
             String username = edUsername.getText().toString();

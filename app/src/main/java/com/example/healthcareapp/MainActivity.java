@@ -18,26 +18,40 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.example.healthcareapp.Entity.Register;
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
 import com.example.healthcareapp.Fragments.NoticeDialogFragment;
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
-    private final String TAG = "MainActivity";
+    private final String TAG = "ActivityMain";
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
+
+    private boolean isStop = false;
+    private boolean showDialog = false;
 
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             //ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
             Log.d(TAG,"Broadcast");
-            showDialogFrament();
+
+            if (!isStop && !showDialog)
+                showDialogFragment();
+
+            /*
+            if (isStop)
+                startForegroundService(new Intent(getApplicationContext(), ForegroundService.class));
+            else {
+                stopService(new Intent(getApplicationContext(), ForegroundService.class));
+                if (!showDialog) {
+                    showDialogFragment();
+                }
+            }
+
+             */
         }
     };
 
@@ -93,19 +107,53 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void showDialogFrament(){
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        isStop = true;
+        startForegroundService(new Intent(this, ForegroundService.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        isStop = false;
+        stopService(new Intent(getApplicationContext(), ForegroundService.class));
+    }
+
+    private void showDialogFragment(){
         NoticeDialogFragment ndf = new NoticeDialogFragment();
+        ndf.setMessage("¿Desea silenciar la alarma?");
         ndf.setListener(new NoticeDialogFragment.NoticeDialogListener() {
             @Override
             public void onDialogPositiveClick() {
                 Log.d(TAG, "Aceptar");
+                showDialog = false;
             }
 
             @Override
             public void onDialogNegativeClick() {
                 Log.d(TAG, "Cancelar");
+                showDialog = false;
+            }
+
+            @Override
+            public void onDismiss() {
+                Log.d(TAG, "onDismiss");
+                showDialog = false;
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG, "onCancel");
+                showDialog = false;
             }
         });
+
+        ndf.show(getSupportFragmentManager(), NoticeDialogFragment.TAG);
+        showDialog = true;
     }
 
     private void buildBroadcastReceiver(){

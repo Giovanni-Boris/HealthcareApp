@@ -55,7 +55,7 @@ public class AlarmService extends Service {
             @Override
             public void run() {
                 checkAlarm();
-                handler.postDelayed(this, 60*1000);
+                handler.postDelayed(this, 5*1000);
             }
         };
 
@@ -97,21 +97,7 @@ public class AlarmService extends Service {
         Intent broadcastIntent = new Intent(BC_ACTION);
         //broadcastIntent.putExtra("dataList", dataList);
         LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
-    }
-
-    private void showDialog(){
-        NoticeDialogFragment ndf = new NoticeDialogFragment();
-        ndf.setListener(new NoticeDialogFragment.NoticeDialogListener() {
-            @Override
-            public void onDialogPositiveClick() {
-                Log.d(TAG, "Aceptar");
-            }
-
-            @Override
-            public void onDialogNegativeClick() {
-                Log.d(TAG, "Cancelar");
-            }
-        });
+        Log.d(TAG, "Mensaje broadcast enviado");
     }
 
     private void simpleInsert(int day) {
