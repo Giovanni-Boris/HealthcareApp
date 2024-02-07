@@ -22,4 +22,7 @@ public interface RegisterDAO {
     @Insert
     void insertAll(List<Register> registers);
 
+    @Query("SELECT glucemia FROM register")
+    List<Double> readGlusemiaAllData();
+
 }

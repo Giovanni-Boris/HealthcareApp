@@ -69,8 +69,8 @@ public class StatisticalGraphic extends View{
         pencilText.setAntiAlias(true);
         pencilText.setARGB(250, Util.color4[0], Util.color4[1], Util.color4[2]);
         pencilText.setStrokeWidth(1);
-        pencilText.setTextSize(15);
-        pencilText.setStyle(Paint.Style.FILL);
+        pencilText.setTextSize(20);
+        pencilText.setStyle(Paint.Style.FILL_AND_STROKE);
         pencilText.setPathEffect(dashPathEffect);
     }//End Method
     /**
@@ -97,7 +97,7 @@ public class StatisticalGraphic extends View{
         double max_value_data = getMaxValue(data);
         double intervalo = max_value_data / (cantidad_lineas - 1);
         canvas.rotate(-90,10, alto_disponible/2 );
-        canvas.drawText("Kilometros", 30, 0, pencilText);
+        canvas.drawText("Glusemia", (float) (alto_disponible/(12.5)), alto_disponible/2 +35, pencilText);
         canvas.rotate(90,10, alto_disponible/2 );
         for (int i = 0; i < cantidad_lineas; i++) {
             int x = 80;
@@ -108,9 +108,9 @@ public class StatisticalGraphic extends View{
         int dias = 7;
         int distancia_dias = ancho_disponible / dias+11;
         for (int i = 0; i < dias; i++) {
-            canvas.drawText("Dia " + (i + 1), 15+margen_x + distancia_dias * i, distancia_lineas * cantidad_lineas + margen_y, pencilText);
+            canvas.drawText("Reg " + (i + 1), 15+margen_x + distancia_dias * i, distancia_lineas * cantidad_lineas + margen_y, pencilText);
         }
-        canvas.drawText("Dias ", 15+margen_x + ancho_disponible/2, distancia_lineas * (cantidad_lineas + 1)+ margen_y, pencilText);
+        canvas.drawText("Registros ", 15+margen_x + ancho_disponible/2, distancia_lineas * (cantidad_lineas + 1)+ margen_y, pencilText);
         int espacio_central_texto_dias = 25;
         int init_point = (cantidad_lineas - 1) * distancia_lineas + margen_y;
         double variable = (init_point - margen_y) / max_value_data;
