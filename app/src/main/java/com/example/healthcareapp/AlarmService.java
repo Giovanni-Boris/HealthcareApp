@@ -12,8 +12,12 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.healthcareapp.Entity.Alarm;
+import com.example.healthcareapp.Fragments.CalendarFragment;
+import com.example.healthcareapp.Fragments.NoticeDialogFragment;
 import com.example.healthcareapp.Room.Datasource;
 
 import java.time.LocalDate;
@@ -24,9 +28,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class AlarmService extends Service {
-    public final String TAG = "AlarmService";
-    public final String CHANNEL_ID = "AlarmServiceChannel";
-    public final int NOTIFICATION_ID = 2;
+    public static final String TAG = "AlarmService";
+    public static final String CHANNEL_ID = "AlarmServiceChannel";
+    public static final int NOTIFICATION_ID = 2;
+    public static final String BC_ACTION = "ALARM_CHECK_ACTION";
 
     private Handler handler;
     private Runnable numberCheckRunnable;
@@ -76,7 +81,7 @@ public class AlarmService extends Service {
 
                     for(Alarm a:alarmas){
                         if (a.getDay() == LocalDate.now().getDayOfMonth()){
-                            showNotif();
+                            sendBroadcastAlarm();
                             return;
                         }
                     }
@@ -86,6 +91,27 @@ public class AlarmService extends Service {
                 .subscribe(() -> {
                     Log.d(TAG, "Verificacion completa...");
                 });
+    }
+
+    private void sendBroadcastAlarm(){
+        Intent broadcastIntent = new Intent(BC_ACTION);
+        //broadcastIntent.putExtra("dataList", dataList);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+    }
+
+    private void showDialog(){
+        NoticeDialogFragment ndf = new NoticeDialogFragment();
+        ndf.setListener(new NoticeDialogFragment.NoticeDialogListener() {
+            @Override
+            public void onDialogPositiveClick() {
+                Log.d(TAG, "Aceptar");
+            }
+
+            @Override
+            public void onDialogNegativeClick() {
+                Log.d(TAG, "Cancelar");
+            }
+        });
     }
 
     private void simpleInsert(int day) {
