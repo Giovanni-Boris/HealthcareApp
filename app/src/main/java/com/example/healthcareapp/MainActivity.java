@@ -23,6 +23,10 @@ import com.example.healthcareapp.Fragments.GraphicFragment;
 import com.example.healthcareapp.Fragments.HomeFragment;
 import com.example.healthcareapp.Fragments.NoticeDialogFragment;
 import com.example.healthcareapp.Room.Datasource;
+import com.example.healthcareapp.Services.AlarmService;
+import com.example.healthcareapp.Services.FirebaseFetchService;
+import com.example.healthcareapp.Services.FirebaseForegroundService;
+import com.example.healthcareapp.Services.ForegroundAlarmService;
 import com.google.android.material.navigation.NavigationView;
 
 import io.reactivex.Completable;
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
+    private boolean isForegroundServiceRunning = false;
 
     private boolean isStop = false;
     private boolean showDialog = false;
@@ -44,24 +49,11 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver dataReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //ArrayList<Register> dataList = (ArrayList<Register>) intent.getSerializableExtra("dataList");
             Log.d(TAG,"Broadcast");
             alarmId = (long) intent.getSerializableExtra("alarmId");
 
             if (!isStop && !showDialog)
                 showDialogFragment();
-
-            /*
-            if (isStop)
-                startForegroundService(new Intent(getApplicationContext(), ForegroundService.class));
-            else {
-                stopService(new Intent(getApplicationContext(), ForegroundService.class));
-                if (!showDialog) {
-                    showDialogFragment();
-                }
-            }
-
-             */
         }
     };
 
@@ -85,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle = new ActionBarDrawerToggle(this,this.drawerLayout,R.string.open,R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
+        startFirebaseFetchService();
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         replaceFragments(new HomeFragment());
@@ -114,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        stopService(new Intent(this, ForegroundService.class));
-        stopService(new Intent(this, AlarmService.class));
         super.onDestroy();
+        stopService(new Intent(this, ForegroundAlarmService.class));
+        stopService(new Intent(this, AlarmService.class));
+        stopFirebaseFetchService();
     }
 
     @Override
@@ -124,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         isStop = true;
-        startForegroundService(new Intent(this, ForegroundService.class));
+        startForegroundService(new Intent(this, ForegroundAlarmService.class));
     }
 
     @Override
@@ -132,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         isStop = false;
-        stopService(new Intent(getApplicationContext(), ForegroundService.class));
+        stopService(new Intent(getApplicationContext(), ForegroundAlarmService.class));
     }
 
     private void showDialogFragment(){
@@ -176,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void simpleDelete(){
+    private void simpleDelete() {
         Completable.fromAction(() -> {
-                    if (alarmId != -1){
+                    if (alarmId != -1) {
                         datasource.alarmDAO().deleteAlarmById(alarmId);
                         alarmId = -1;
                     }
@@ -188,5 +182,54 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(() -> {
                     Log.d(TAG, "Eliminación completa...");
                 });
+    }
+
+    private void startFirebaseFetchService() {
+        //System.out.println("Empezando servicio");
+        Intent serviceIntent = new Intent(this, FirebaseFetchService.class);
+        this.startService(serviceIntent);
+    }
+
+    private void stopFirebaseFetchService() {
+        Intent serviceIntent = new Intent(this, FirebaseFetchService.class);
+        this.stopService(serviceIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Verificar si el servicio en primer plano está en ejecución
+        if (isForegroundServiceRunning) {
+            // Detener el servicio en primer plano
+            stopForegroundService();
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopFirebaseFetchService();
+        // Verificar si el servicio en primer plano no está en ejecución
+        if (!isForegroundServiceRunning) {
+            // Iniciar el servicio en primer plano
+            startForegroundService();
+        }
+    }
+
+    private void startForegroundService() {
+        // Iniciar el servicio en primer plano
+        Intent serviceIntent = new Intent(this, FirebaseForegroundService.class);
+        startForegroundService(serviceIntent);
+        isForegroundServiceRunning = true;
+    }
+
+    private void stopForegroundService() {
+        // Detener el servicio en primer plano
+
+        Intent serviceIntent = new Intent(this, FirebaseForegroundService.class);
+        stopService(serviceIntent);
+        isForegroundServiceRunning = false;
     }
 }
