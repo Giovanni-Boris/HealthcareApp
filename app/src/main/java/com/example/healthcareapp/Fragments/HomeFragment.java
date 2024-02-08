@@ -141,6 +141,7 @@ public class HomeFragment extends Fragment {
                 dataReceiver,
                 new IntentFilter("DATA_FETCHED_ACTION")
         );
+        storeDataInArrays();
     }
 
     @Override
