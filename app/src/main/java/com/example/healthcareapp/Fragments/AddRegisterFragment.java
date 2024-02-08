@@ -138,6 +138,16 @@ import androidx.fragment.app.DialogFragment;
                 public void onDialogNegativeClick() {
                     register = null;
                 }
+
+                @Override
+                public void onDismiss() {
+                    register = null;
+                }
+
+                @Override
+                public void onCancel() {
+                    register = null;
+                }
             });
             dialog.show(getChildFragmentManager(), NoticeDialogFragment.TAG);
 

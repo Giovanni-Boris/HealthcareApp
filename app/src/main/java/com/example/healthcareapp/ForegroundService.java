@@ -68,7 +68,7 @@ public class ForegroundService extends Service {
 
         // Construye la notificación
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
+                .setContentTitle("Alarma")
                 .setContentText("Presiona para abrir la aplicación")
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentIntent(pendingIntent)
