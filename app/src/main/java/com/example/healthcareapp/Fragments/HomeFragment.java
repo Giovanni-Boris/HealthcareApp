@@ -135,11 +135,23 @@ public class HomeFragment extends Fragment {
 
     }
     @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+                dataReceiver,
+                new IntentFilter("DATA_FETCHED_ACTION")
+        );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
+    }
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        //Log.d("HomeFragment","Eliminando fragment");
         compositeDisposable.dispose();
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(dataReceiver);
     }
-
 }

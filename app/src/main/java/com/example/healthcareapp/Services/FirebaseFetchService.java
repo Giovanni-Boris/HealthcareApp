@@ -39,7 +39,7 @@ public class FirebaseFetchService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Log.d(TAG,"Prendiendo  el servicio");
+        Log.d(TAG,"Prendiendo  el servicio");
         datasource = Datasource.newInstance(getApplicationContext());
         registerRepository = new RegisterRepository(datasource.registerDAO());
         databaseReference = FirebaseDatabase.getInstance().getReference("Registers");
@@ -70,6 +70,8 @@ public class FirebaseFetchService extends Service {
                         Register register = Register.fromMap(dataMap);
                         dataList.add(register);
                     }
+                    Log.d(TAG,"Nueva data tamaño"+ dataList.size());
+
                     chargeData(dataList);
                 }
             } else {
@@ -82,7 +84,6 @@ public class FirebaseFetchService extends Service {
         Disposable disposable = registerRepository.syncWithFirebase(dataList)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((size) -> {
-                    Log.d(TAG,"Misisng"+ size);
                     sendBroadcastData(size);
                 }, throwable -> {
                     Log.d(TAG,"No se pudo cargar");

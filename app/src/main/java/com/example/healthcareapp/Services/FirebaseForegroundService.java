@@ -37,7 +37,7 @@ public class FirebaseForegroundService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("ForegroundService","Llamando ");
-            int missingRegisters = intent.getIntExtra("missing_registers", 0);
+            int missingRegisters = intent.getIntExtra("new_values", 0);
             showNotification(missingRegisters);
         }
     };
@@ -64,6 +64,7 @@ public class FirebaseForegroundService extends Service {
         super.onDestroy();
         backgroundServiceConnector.stopBackgroundService();
         unregisterNotificationReceiver();
+        backgroundServiceConnector.startBackgroundService();
     }
 
     @Nullable

@@ -1,7 +1,12 @@
 package com.example.healthcareapp;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
     private void startFirebaseFetchService() {
+        //System.out.println("Empezando servicio");
         Intent serviceIntent = new Intent(this, FirebaseFetchService.class);
         this.startService(serviceIntent);
     }
@@ -89,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        startFirebaseFetchService();
         // Verificar si el servicio en primer plano está en ejecución
         if (isForegroundServiceRunning) {
             // Detener el servicio en primer plano
             stopForegroundService();
         }
+
     }
 
     @Override
@@ -117,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopForegroundService() {
         // Detener el servicio en primer plano
+
         Intent serviceIntent = new Intent(this, FirebaseForegroundService.class);
         stopService(serviceIntent);
         isForegroundServiceRunning = false;
