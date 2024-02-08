@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.healthcareapp.Room.Datasource;
 import com.example.healthcareapp.Room.UserDAO;
+import com.example.healthcareapp.Services.AlarmService;
 import com.example.healthcareapp.Services.AuthService;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;

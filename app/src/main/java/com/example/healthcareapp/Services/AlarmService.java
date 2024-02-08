@@ -1,4 +1,4 @@
-package com.example.healthcareapp;
+package com.example.healthcareapp.Services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -18,6 +18,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.healthcareapp.Entity.Alarm;
 import com.example.healthcareapp.Fragments.CalendarFragment;
 import com.example.healthcareapp.Fragments.NoticeDialogFragment;
+import com.example.healthcareapp.LoginActivity;
 import com.example.healthcareapp.Room.Datasource;
 
 import java.time.LocalDate;

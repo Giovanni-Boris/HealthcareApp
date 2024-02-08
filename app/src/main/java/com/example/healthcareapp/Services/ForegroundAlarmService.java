@@ -1,20 +1,20 @@
-package com.example.healthcareapp;
+package com.example.healthcareapp.Services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-public class ForegroundService extends Service {
+import com.example.healthcareapp.LoginActivity;
+
+public class ForegroundAlarmService extends Service {
 
     private static final String CHANNEL_ID = "foreground_channel";
     private static final int NOTIFICATION_ID = 1;

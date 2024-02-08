@@ -9,6 +9,7 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 
 public class RegisterRepository {
@@ -28,11 +29,12 @@ public class RegisterRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Completable syncWithFirebase(List<Register> firebaseRegisters) {
-        return Completable.fromAction(() -> {
+    public Single<Integer> syncWithFirebase(List<Register> firebaseRegisters) {
+        return Single.fromCallable(() -> {
             List<Register> roomRegisters = registerDAO.readAllData();
             List<Register> missingRegisters = findMissingRegisters(roomRegisters, firebaseRegisters);
             registerDAO.insertAll(missingRegisters);
+            return missingRegisters.size();
         }).subscribeOn(Schedulers.io());
     }
     private List<Register> findMissingRegisters(List<Register> roomRegisters, List<Register> firebaseRegisters) {
